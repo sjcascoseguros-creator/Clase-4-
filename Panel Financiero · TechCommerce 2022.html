@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Panel Financiero · TechCommerce 2022</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#0E1512; --panel:#151E19; --panel2:#101815; --line:#233029;
+  --ink:#EAF2EC; --ink-dim:#9FB3A7; --accent:#3ECF8E; --warn:#E8A23D; --bad:#E85C4A;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+  box-sizing:border-box;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;line-height:1.5}
+.mono{font-family:'IBM Plex Mono',monospace}
+header{padding:2.2rem 1.5rem 1.4rem;border-bottom:1px solid var(--line);background:var(--panel2)}
+header h1{margin:0 0 .3rem;font-size:1.5rem;font-weight:700;letter-spacing:-.01em}
+header p{margin:0;color:var(--ink-dim);font-size:.92rem;max-width:640px}
+main{max-width:1180px;margin:0 auto;padding:1.6rem 1.5rem 3rem}
+section{margin-bottom:2.2rem}
+h2{font-size:1.05rem;font-weight:600;margin:0 0 .3rem;color:var(--ink)}
+.note{color:var(--ink-dim);font-size:.86rem;margin:0 0 .9rem;max-width:720px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.7rem}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:.9rem 1rem}
+.kpi .v{font-size:1.35rem;font-weight:700;font-family:'IBM Plex Mono',monospace}
+.kpi .l{color:var(--ink-dim);font-size:.76rem;margin-top:.2rem}
+.pos{color:var(--accent)} .neg{color:var(--bad)}
+.alerts{display:grid;gap:.6rem}
+.alert{border:1px solid var(--line);border-left:3px solid var(--warn);background:var(--panel);border-radius:8px;padding:.8rem 1rem;font-size:.88rem}
+.alert.bad{border-left-color:var(--bad)}
+.alert b{display:block;margin-bottom:.15rem;font-size:.92rem}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.1rem}
+@media(max-width:820px){.grid2,.grid3{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:1rem 1.1rem}
+.card h3{margin:0 0 .7rem;font-size:.88rem;font-weight:600;color:var(--ink-dim)}
+canvas{max-height:280px}
+table{width:100%;border-collapse:collapse;font-size:.86rem}
+th,td{text-align:left;padding:.4rem .5rem;border-bottom:1px solid var(--line)}
+th{color:var(--ink-dim);font-weight:500;font-size:.78rem}
+td.num,th.num{text-align:right;font-family:'IBM Plex Mono',monospace}
+.concl{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:1.1rem 1.2rem}
+.concl ul{margin:.4rem 0 0;padding-left:1.1rem}
+.concl li{margin-bottom:.45rem;font-size:.9rem}
+footer{color:var(--ink-dim);font-size:.78rem;text-align:center;padding:1.5rem;border-top:1px solid var(--line)}
+</style>
+</head>
+<body>
+<header>
+  <h1>Panel Financiero — Ventas de Tecnología 2022</h1>
+  <p>Análisis de 1.901 transacciones (ene–dic 2022, diciembre parcial hasta el día 14) sobre celulares, portátiles y equipos de escritorio. Cifras en millones de COP salvo que se indique lo contrario.</p>
+</header>
+<main>
+
+<section>
+  <h2>Indicadores clave</h2>
+  <p class="note">Los cinco números que resumen la salud del negocio: cuánto se vende, qué margen queda después de costos, y a qué ritmo.</p>
+  <div class="kpis">
+    <div class="kpi"><div class="v">$103.805M</div><div class="l">Ventas totales (COP)</div></div>
+    <div class="kpi"><div class="v pos">$16.260M</div><div class="l">Utilidad bruta</div></div>
+    <div class="kpi"><div class="v">15,7%</div><div class="l">Margen bruto</div></div>
+    <div class="kpi"><div class="v">$54,6M</div><div class="l">Ticket promedio por venta</div></div>
+    <div class="kpi"><div class="v">24.541</div><div class="l">Unidades vendidas</div></div>
+    <div class="kpi"><div class="v">1.901</div><div class="l">Transacciones registradas</div></div>
+  </div>
+</section>
+
+<section>
+  <h2>Alertas de riesgo</h2>
+  <p class="note">Información que nadie pidió explícitamente, pero que cambia cómo se debe leer el resto del panel.</p>
+  <div class="alerts">
+    <div class="alert bad"><b>Concentración de clientes extrema (HHI ≈ 2.893)</b>Solo 4 clientes generan el 100% de las ventas; Asociados LTDA concentra el 42%. Perder ese cliente sería una crisis de ingresos inmediata — conviene diversificar la cartera.</div>
+    <div class="alert bad"><b>84% de las ventas son a crédito</b>$84.141M dependen de cobro futuro frente a solo $19.664M de contado. Sin datos de cartera vencida, el riesgo de liquidez es alto y merece seguimiento de cuentas por cobrar.</div>
+    <div class="alert"><b>Margen no acompaña el volumen</b>Mayo fue el mes de mayor venta pero no el de mayor margen relativo; julio y diciembre caen por debajo del 15,7% promedio. El costo de ventas crece casi al mismo ritmo que los ingresos.</div>
+  </div>
+</section>
+
+<section>
+  <h2>Tendencia mensual y pronóstico</h2>
+  <p class="note">Ventas, costo y margen mes a mes, con una proyección lineal simple a 3 meses (dic 2022 estimado completo, ene–mar 2023). Es una extrapolación de tendencia, no un presupuesto: sirve para detectar dirección, no para comprometer cifras.</p>
+  <div class="card"><canvas id="chTrend"></canvas></div>
+</section>
+
+<section>
+  <h2>Desempeño por producto, marca y canal</h2>
+  <div class="grid2">
+    <div class="card"><h3>Top 10 productos por ventas</h3><canvas id="chProd"></canvas></div>
+    <div class="card"><h3>Participación por marca</h3><canvas id="chMarca"></canvas></div>
+  </div>
+</section>
+
+<section>
+  <div class="grid3">
+    <div class="card"><h3>Ventas por ciudad</h3><canvas id="chCiudad"></canvas></div>
+    <div class="card"><h3>Tipo de cliente (A/B/C)</h3><canvas id="chTipoCli"></canvas></div>
+    <div class="card"><h3>Forma de pago</h3><canvas id="chPago"></canvas></div>
+  </div>
+</section>
+
+<section>
+  <h2>Ranking de vendedores</h2>
+  <p class="note">Empleado asociado a cada venta y su área. No todos pertenecen al área comercial — varias ventas pasan por Compras, Almacén o Despachos, lo que sugiere un proceso de venta con múltiples responsables.</p>
+  <div class="card"><canvas id="chVend"></canvas></div>
+</section>
+
+<section>
+  <h2>Conclusiones y recomendaciones</h2>
+  <div class="concl">
+    <p class="note" style="margin-bottom:.6rem">Por qué importa cada hallazgo del archivo Excel adjunto, resumido:</p>
+    <ul>
+      <li><b>Diversificar clientes:</b> con solo 4 clientes, cualquier renegociación de precio o mora afecta directamente el flujo de caja. Meta razonable: bajar la participación del cliente principal por debajo del 30%.</li>
+      <li><b>Gestionar cartera de crédito:</b> el 84% a crédito exige política de cobro clara (plazos, moras, garantías) que hoy no está en la base de datos.</li>
+      <li><b>Revisar mezcla de producto:</b> Portátiles generan el mayor margen absoluto (≈$8.849M); Celulares tienen buen volumen pero menor margen relativo — hay espacio para ajustar precios o mix.</li>
+      <li><b>Diciembre parcial:</b> los datos cortan el 14 de diciembre, por lo que ese mes no debe compararse directamente contra los demás sin ajustar por días.</li>
+    </ul>
+  </div>
+</section>
+
+</main>
+<footer>Panel generado a partir de BaseDatos.xlsx · Cifras en millones de COP · Análisis complementario en el archivo Excel</footer>
+
+<script>
+const C = {accent:'#3ECF8E', warn:'#E8A23D', bad:'#E85C4A', ink:'#EAF2EC', dim:'#9FB3A7', line:'#233029',
+  pal:['#3ECF8E','#5FB4E0','#E8A23D','#E85C4A','#B48EE8','#6FE0C8','#E0D65F','#8EA3E8','#E08EC0','#9FB3A7']};
+Chart.defaults.color = C.dim;
+Chart.defaults.font.family = "'IBM Plex Sans',sans-serif";
+Chart.defaults.borderColor = C.line;
+
+const monthly = {"labels":["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"],
+"ventas":[9739.0,7667.5,9139.6,11045.6,13800.3,8076.8,5985.6,7802.3,7381.2,8689.0,9979.0,4499.4],
+"costo":[8190.9,6457.4,7826.4,9231.8,11547.6,6871.2,5042.2,6642.7,6182.9,7302.9,8454.9,3794.7],
+"margen":[1548.1,1210.1,1313.2,1813.8,2252.8,1205.6,943.4,1159.6,1198.3,1386.0,1524.1,704.7],
+"fLabels":["Dic(est)","Ene 23","Feb 23","Mar 23"],
+"fVentas":[8248.3,8118.4,7988.5,7858.6],
+"fCosto":[6964.0,6855.7,6747.4,6639.1]};
+
+new Chart(document.getElementById('chTrend'), {
+  data:{
+    labels:[...monthly.labels, ...monthly.fLabels],
+    datasets:[
+      {type:'line', label:'Ventas', data:[...monthly.ventas, ...Array(4).fill(null)], borderColor:C.accent, backgroundColor:C.accent, tension:.3},
+      {type:'line', label:'Costo', data:[...monthly.costo, ...Array(4).fill(null)], borderColor:C.warn, backgroundColor:C.warn, tension:.3},
+      {type:'line', label:'Margen', data:[...monthly.margen, ...Array(4).fill(null)], borderColor:'#5FB4E0', backgroundColor:'#5FB4E0', tension:.3},
+      {type:'line', label:'Ventas (proyección)', data:[...Array(11).fill(null), monthly.ventas[11], ...monthly.fVentas], borderColor:C.accent, borderDash:[5,4], pointStyle:'triangle'},
+      {type:'line', label:'Costo (proyección)', data:[...Array(11).fill(null), monthly.costo[11], ...monthly.fCosto], borderColor:C.warn, borderDash:[5,4], pointStyle:'triangle'},
+    ]
+  },
+  options:{responsive:true, interaction:{mode:'index',intersect:false}, plugins:{legend:{labels:{boxWidth:10,font:{size:11}}}}, scales:{y:{title:{display:true,text:'Millones COP'}}}}
+});
+
+const prod = {"labels":["Lenovo 14IGL7","MacBook Pro","ASUS AIO V","Gaming F15","15\" Ip1 Athlon","Xiaomi Redmi 8","MacBook Air","Intel Core i7","Galaxy J-Pro","Janus"],"values":[9897.5,9468.1,8806.1,8517.5,6585.6,6367.9,6033.3,5161.5,4949.8,4392.8]};
+new Chart(document.getElementById('chProd'), {type:'bar', data:{labels:prod.labels, datasets:[{data:prod.values, backgroundColor:C.accent, borderRadius:3}]},
+  options:{indexAxis:'y', plugins:{legend:{display:false}}, scales:{x:{title:{display:true,text:'Millones COP'}}}}});
+
+const marca = {"labels":["Apple","Asus","Lenovo","Xiaomi","Intel","Samsung","Janus","Acer","Vivo"],"values":[27792.4,17323.6,16655.7,13079.3,9280.9,8142.4,4392.8,4194.9,2943.2]};
+new Chart(document.getElementById('chMarca'), {type:'doughnut', data:{labels:marca.labels, datasets:[{data:marca.values, backgroundColor:C.pal}]},
+  options:{plugins:{legend:{position:'right',labels:{boxWidth:10,font:{size:10}}}}}});
+
+const ciudad = {"labels":["Bogotá","Medellín","Bucaramanga","Cali"],"values":[43739.6,20886.4,19664.0,19515.4]};
+new Chart(document.getElementById('chCiudad'), {type:'bar', data:{labels:ciudad.labels, datasets:[{data:ciudad.values, backgroundColor:C.pal}]}, options:{plugins:{legend:{display:false}}}});
+
+const tipoCli = {"labels":["A","B","C"],"values":[64668.6,19664.0,19472.8]};
+new Chart(document.getElementById('chTipoCli'), {type:'doughnut', data:{labels:tipoCli.labels, datasets:[{data:tipoCli.values, backgroundColor:[C.accent,C.warn,C.bad]}]}, options:{plugins:{legend:{position:'bottom'}}}});
+
+const pago = {"labels":["Contado","Crédito"],"values":[19664.0,84141.4]};
+new Chart(document.getElementById('chPago'), {type:'doughnut', data:{labels:pago.labels, datasets:[{data:pago.values, backgroundColor:[C.accent,C.bad]}]}, options:{plugins:{legend:{position:'bottom'}}}});
+
+const vend = {"labels":["Diego","Matias","Liliana","Alejandra","Martha","Juan","Hernan","Daniela","Lina","Paola"],"values":[12468.9,11001.4,10813.6,10746.5,10489.3,10240.3,9927.6,9457.1,9441.5,9219.1]};
+new Chart(document.getElementById('chVend'), {type:'bar', data:{labels:vend.labels, datasets:[{data:vend.values, backgroundColor:C.accent, borderRadius:3}]}, options:{plugins:{legend:{display:false}}, scales:{y:{title:{display:true,text:'Millones COP'}}}}});
+</script>
+</body>
+</html>
